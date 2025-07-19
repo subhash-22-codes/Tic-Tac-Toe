@@ -107,13 +107,6 @@ export default function Dashboard({ playerName, score, avatar, isActive, symbol,
           </div>
         )}
 
-        {/* Subtle Glow Effect for Active Player */}
-        {isActive && (
-          <div 
-            className="absolute inset-0 rounded-xl sm:rounded-2xl opacity-20 blur-xl -z-10 animate-pulse"
-            style={{ backgroundColor: color }}
-          />
-        )}
       </div>
     </div>
   );

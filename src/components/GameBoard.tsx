@@ -10,7 +10,6 @@ interface GameBoardProps {
   onResetGame: () => void;
 }
 
-
 export type Player = 'X' | 'O' | null;
 
 export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps) {
@@ -23,17 +22,16 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
   const [roundWinner, setRoundWinner] = useState<string | null>(null);
 
   const avatars = [
-  'https://i.imgflip.com/4/4t0m5.jpg', // Distracted Boyfriend
-  'https://i.imgflip.com/1ur9b0.jpg', // Drake Hotline Bling
-  'https://i.imgflip.com/26am.jpg',   // Grumpy Cat
-  'https://i.imgflip.com/3si4.jpg',   // Hide the Pain Harold
-  'https://i.imgflip.com/30b1gx.jpg', // Is This a Pigeon?
-  'https://i.imgflip.com/1otk96.jpg', // Expanding Brain
-  'https://i.imgflip.com/39t1o.jpg',  // Confused Nick Young
-  'https://i.imgflip.com/3txjhl.jpg', // Buff Doge vs Cheems
-  'https://i.imgflip.com/2hgfw.jpg'   // Success Kid
-];
-
+    'https://i.imgflip.com/4/4t0m5.jpg', // Distracted Boyfriend
+    'https://i.imgflip.com/1ur9b0.jpg', // Drake Hotline Bling
+    'https://i.imgflip.com/26am.jpg',   // Grumpy Cat
+    'https://i.imgflip.com/3si4.jpg',   // Hide the Pain Harold
+    'https://i.imgflip.com/30b1gx.jpg', // Is This a Pigeon?
+    'https://i.imgflip.com/1otk96.jpg', // Expanding Brain
+    'https://i.imgflip.com/39t1o.jpg',  // Confused Nick Young
+    'https://i.imgflip.com/3txjhl.jpg', // Buff Doge vs Cheems
+    'https://i.imgflip.com/2hgfw.jpg'   // Success Kid
+  ];
 
   const checkWinner = (squares: Player[]) => {
     const lines = [
@@ -78,33 +76,34 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
   };
 
   const nextRound = useCallback(() => {
-  if (currentRound >= gameSettings.totalRounds) {
-    let finalWinner = '';
-    if (scores.player1 > scores.player2) {
-      finalWinner = gameSettings.player1Name;
-    } else if (scores.player2 > scores.player1) {
-      finalWinner = gameSettings.player2Name;
+    if (currentRound >= gameSettings.totalRounds) {
+      let finalWinner = '';
+      if (scores.player1 > scores.player2) {
+        finalWinner = gameSettings.player1Name;
+      } else if (scores.player2 > scores.player1) {
+        finalWinner = gameSettings.player2Name;
+      } else {
+        finalWinner = 'tie';
+      }
+      setWinner(finalWinner);
+      setGameComplete(true);
     } else {
-      finalWinner = 'tie';
+      setCurrentRound(prev => prev + 1);
+      setBoard(Array(9).fill(null));
+      setCurrentPlayer('X');
+      setRoundWinner(null);
     }
-    setWinner(finalWinner);
-    setGameComplete(true);
-  } else {
-    setCurrentRound(prev => prev + 1);
-    setBoard(Array(9).fill(null));
-    setCurrentPlayer('X');
-    setRoundWinner(null);
-  }
-}, [currentRound, gameSettings, scores]);
+  }, [currentRound, gameSettings, scores]);
 
-useEffect(() => {
-  if (roundWinner) {
-    const timer = setTimeout(() => {
-      nextRound();
-    }, 2000);
-    return () => clearTimeout(timer);
-  }
-}, [roundWinner, nextRound]);
+  useEffect(() => {
+    if (roundWinner) {
+      const timer = setTimeout(() => {
+        nextRound();
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [roundWinner, nextRound]);
+
   return (
     <div className="min-h-screen p-2 sm:p-4 lg:p-8">
       {/* Compact Header */}
@@ -162,9 +161,7 @@ useEffect(() => {
             
             {/* Mobile VS Section */}
             <div className="flex items-center justify-center px-2">
-      
               <span className="font-bungee text-lg font-bold mx-2 text-[#FFD700]">VS</span>
-      
             </div>
 
             <div className="flex-1 max-w-[140px]">
@@ -216,71 +213,84 @@ useEffect(() => {
           </div>
         </div>
 
-        {/* Desktop Layout: Grid */}
-        <div className="hidden lg:block">
-          {/* Desktop Player Dashboards */}
-          <div className="grid grid-cols-3 gap-8 mb-8 items-center">
-            <Dashboard
-              playerName={gameSettings.player1Name}
-              score={scores.player1}
-              avatar={avatars[0]}
-              isActive={currentPlayer === 'X' && !roundWinner}
-              symbol="X"
-              color="#00BFFF"
-            />
-            
-            {/* Desktop VS Section */}
-            <div className="flex items-center justify-center">
-              
-              <span className="font-bungee text-4xl font-bold mx-6 text-[#FFD700]">VS</span>
-  
+        {/* Desktop Layout: Professional Side-by-Side with Centered Board */}
+        <div className="hidden lg:grid lg:grid-cols-5 lg:gap-8 lg:items-start">
+          {/* Left Player Dashboard */}
+          <div className="lg:col-span-1 flex justify-center">
+            <div className="w-full max-w-xs sticky top-8">
+              <Dashboard
+                playerName={gameSettings.player1Name}
+                score={scores.player1}
+                avatar={avatars[0]}
+                isActive={currentPlayer === 'X' && !roundWinner}
+                symbol="X"
+                color="#00BFFF"
+              />
             </div>
-
-            <Dashboard
-              playerName={gameSettings.player2Name}
-              score={scores.player2}
-              avatar={avatars[1]}
-              isActive={currentPlayer === 'O' && !roundWinner}
-              symbol="O"
-              color="#FF4500"
-            />
           </div>
 
-          {/* Desktop Current Turn Indicator */}
-          {!roundWinner && (
-            <div className="text-center mb-6">
-              <div className="glassmorphism rounded-xl p-4 inline-block">
-                <div className="flex items-center justify-center gap-3">
-                  <Zap className="w-5 h-5 text-[#FFD700] animate-pulse" />
-                  <p className="font-poppins text-xl text-gray-300">
-                    Current Turn: 
-                    <span className={`ml-2 font-semibold ${currentPlayer === 'X' ? 'text-[#00BFFF]' : 'text-[#FF4500]'}`}>
-                      {currentPlayer === 'X' ? gameSettings.player1Name : gameSettings.player2Name}
-                    </span>
-                    <span className="text-[#FFD700] ml-2">({currentPlayer})</span>
-                  </p>
+          {/* Center Game Area */}
+          <div className="lg:col-span-3 space-y-8">
+            {/* Desktop Current Turn Indicator */}
+            {!roundWinner && (
+              <div className="text-center">
+                <div className="glassmorphism rounded-xl p-6 inline-block">
+                  <div className="flex items-center justify-center gap-4">
+                    <Zap className="w-6 h-6 text-[#FFD700] animate-pulse" />
+                    <p className="font-poppins text-2xl text-gray-300">
+                      Current Turn: 
+                      <span className={`ml-2 font-semibold ${currentPlayer === 'X' ? 'text-[#00BFFF]' : 'text-[#FF4500]'}`}>
+                        {currentPlayer === 'X' ? gameSettings.player1Name : gameSettings.player2Name}
+                      </span>
+                      <span className="text-[#FFD700] ml-2">({currentPlayer})</span>
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Desktop Round Winner */}
-          {roundWinner && (
-            <div className="text-center mb-6">
-              <div className="glassmorphism rounded-xl p-6 inline-block animate-in zoom-in-95 duration-500">
-                <p className="font-uphoria text-3xl font-bold text-[#FFD700] mb-2">
+            {/* Desktop Round Winner */}
+            {roundWinner && (
+            <div className="text-center">
+              <div className="glassmorphism rounded-2xl px-6 py-4 inline-block animate-in zoom-in-95 duration-500 shadow-lg max-w-md">
+                <p className="font-outfit text-1xl sm:text-2xl font-bold text-[#FFD700] mb-2">
                   {roundWinner === 'tie' ? "It's a Tie!" : `${roundWinner} Wins This Round!`}
                 </p>
-                <p className="font-poppins text-sm text-gray-300">
+                <p className="font-madimi text-base sm:text-lg text-gray-300">
                   Next round starting...
                 </p>
               </div>
             </div>
           )}
 
-          {/* Desktop Game Board */}
-          <div className="flex justify-center">
-            <Board board={board} onSquareClick={handleSquareClick} />
+
+            {/* Desktop VS Section */}
+            <div className="text-center">
+              <div className="inline-block">
+                <span className="font-bungee text-5xl font-bold text-[#FFD700] drop-shadow-lg">VS</span>
+              </div>
+            </div>
+
+            {/* Desktop Game Board - Centered */}
+            <div className="flex justify-center">
+              <div className="transform hover:scale-105 transition-transform duration-300">
+                <Board board={board} onSquareClick={handleSquareClick} />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Player Dashboard */}
+          <div className="lg:col-span-1 flex justify-center">
+            <div className="w-full max-w-xs sticky top-8">
+              <Dashboard
+                playerName={gameSettings.player2Name}
+                score={scores.player2}
+                avatar={avatars[1]}
+                isActive={currentPlayer === 'O' && !roundWinner}
+                symbol="O"
+                color="#FF4500"
+              />
+            </div>
           </div>
         </div>
       </div>
