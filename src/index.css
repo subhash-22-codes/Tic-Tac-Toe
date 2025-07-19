@@ -41,3 +41,22 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
+
+@media screen and (max-width: 768px) {
+  input,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+
+/* Hide scrollbars globally while keeping scroll functionality */
+body, * {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+}
+
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

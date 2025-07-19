@@ -1,5 +1,7 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Trophy, RotateCcw, Home, Star } from 'lucide-react';
+import { Variants } from 'framer-motion';
 
 interface WinnerModalProps {
   winner: string;
@@ -10,83 +12,180 @@ interface WinnerModalProps {
   onExit: () => void;
 }
 
-export default function WinnerModal({ winner, player1Name, player2Name, scores, onPlayAgain, onExit }: WinnerModalProps) {
+export default function WinnerModal({ 
+  winner, 
+  player1Name, 
+  player2Name, 
+  scores, 
+  onPlayAgain, 
+  onExit 
+}: WinnerModalProps) {
   const isTie = winner === 'tie';
-  
+
+  const backdropVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 }
+  };
+
+  const modalVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.8, y: 50 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 300, damping: 25 } as const
+    }
+  };
+
+  const staggerContainer: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 } as const
+    }
+  };
+
+  const staggerItem: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="glassmorphism rounded-3xl p-8 max-w-lg w-full text-center animate-in zoom-in-95 duration-300">
-        {/* Trophy Icon */}
-        <div className="mb-6">
-          {isTie ? (
-            <div className="flex justify-center gap-4">
-              <Trophy className="w-16 h-16 text-[#FFD700] animate-pulse" />
-              <Trophy className="w-16 h-16 text-[#FFD700] animate-pulse" />
-            </div>
-          ) : (
-            <Trophy className="w-20 h-20 mx-auto text-[#FFD700] animate-bounce" />
-          )}
-        </div>
+    <motion.div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      variants={backdropVariants}
+      initial="hidden"
+      animate="visible"
+      style={{
+        background: 'rgba(0, 0, 0, 0.85)',
+        backdropFilter: 'blur(8px)'
+      }}
+    >
+      <motion.div 
+        className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg"
+        variants={modalVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="bg-black bg-opacity-60 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-white/10">
+          {/* Header Section */}
+          <div className="px-6 sm:px-8 pt-8 pb-6 text-center border-b border-white/10">
+            <motion.div 
+              className="mb-4 sm:mb-6"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            >
+              {isTie ? (
+                <div className="flex justify-center gap-3 sm:gap-4">
+                  <Trophy className="w-12 h-12 sm:w-16 sm:h-16 text-[rgba(255,215,0,0.9)]" />
+                  <Trophy className="w-12 h-12 sm:w-16 sm:h-16 text-[rgba(255,215,0,0.9)]" />
+                </div>
+              ) : (
+                <Trophy className="w-16 h-16 sm:w-20 sm:h-20 mx-auto text-[rgba(255,215,0,0.9)]" />
+              )}
+            </motion.div>
 
-        {/* Winner Announcement */}
-        <div className="mb-8">
-          <h2 className="font-uphoria text-4xl font-bold mb-4">
-            {isTie ? (
-              <span className="bg-gradient-to-r from-[#00BFFF] to-[#FF4500] bg-clip-text text-transparent">
-                Perfect Tie!
-              </span>
-            ) : (
-              <span className="bg-gradient-to-r from-[#FFD700] via-[#FF4500] to-[#00BFFF] bg-clip-text text-transparent">
-                🎉 {winner} Wins! 🎉
-              </span>
-            )}
-          </h2>
-          <p className="font-galey text-xl text-gray-300">
-            {isTie ? 'Both players are champions!' : 'Congratulations on your victory!'}
-          </p>
-        </div>
-
-        {/* Final Scores */}
-        <div className="glassmorphism-dark rounded-2xl p-6 mb-8">
-          <h3 className="font-poppins text-lg font-semibold mb-4 text-[#FFD700]">Final Scores</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center">
-              <p className="font-poppins text-sm text-gray-300 mb-1">{player1Name}</p>
-              <p className="font-modern-outdoor text-3xl font-bold text-[#00BFFF]">{scores.player1}</p>
-            </div>
-            <div className="text-center">
-              <p className="font-poppins text-sm text-gray-300 mb-1">{player2Name}</p>
-              <p className="font-modern-outdoor text-3xl font-bold text-[#FF4500]">{scores.player2}</p>
-            </div>
+            <motion.div variants={staggerContainer} initial="hidden" animate="visible">
+              <motion.h2 
+                className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 sm:mb-4"
+                variants={staggerItem}
+              >
+                {isTie ? "Damn it's a Tie!" : `🎉 ${winner} Wins! 🎉`}
+              </motion.h2>
+              <motion.p 
+                className="text-sm sm:text-base lg:text-lg text-white/80"
+                variants={staggerItem}
+              >
+                {isTie ? 'Both players are champions!' : 'Congratulations on your victory!'}
+              </motion.p>
+            </motion.div>
           </div>
-        </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button
-            onClick={onPlayAgain}
-            className="font-poppins flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#00BFFF] to-[#FF4500] text-white font-semibold hover:from-[#0099CC] hover:to-[#CC3300] transition-all duration-200 flex items-center justify-center gap-2 transform hover:scale-105"
+          {/* Scores Section */}
+          <motion.div 
+            className="px-6 sm:px-8 py-6"
+            variants={staggerItem}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.3 }}
           >
-            <RotateCcw className="w-5 h-5" />
-            Play Again
-          </button>
-          
-          <button
-            onClick={onExit}
-            className="font-poppins flex-1 px-6 py-3 rounded-xl glassmorphism hover:bg-white/20 transition-all duration-200 flex items-center justify-center gap-2 transform hover:scale-105"
-          >
-            <Home className="w-5 h-5" />
-            Exit
-          </button>
-        </div>
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-4 text-center">
+              Final Scores
+            </h3>
+            <div className="bg-white/10 rounded-xl p-4 sm:p-6">
+              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                <div className="text-center">
+                  <p className="text-xs sm:text-sm text-white/70 mb-1 font-medium">
+                    {player1Name}
+                  </p>
+                  <p className="text-2xl sm:text-3xl font-bold text-[rgba(255,215,0,0.9)]">
+                    {scores.player1}
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-xs sm:text-sm text-white/70 mb-1 font-medium">
+                    {player2Name}
+                  </p>
+                  <p className="text-2xl sm:text-3xl font-bold text-[rgba(255,215,0,0.9)]">
+                    {scores.player2}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
 
-        {/* Decorative Stars */}
-        <div className="flex justify-center gap-2 mt-6">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Star key={star} className="w-4 h-4 text-[#FFD700] fill-current animate-pulse" style={{ animationDelay: `${star * 0.2}s` }} />
-          ))}
+          {/* Action Buttons */}
+          <motion.div 
+            className="px-6 sm:px-8 pb-6 sm:pb-8"
+            variants={staggerItem}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.4 }}
+          >
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <motion.button
+                onClick={onPlayAgain}
+                className="flex-1 px-4 sm:px-6 py-3 rounded-xl bg-[rgba(255,215,0,0.9)] text-black font-semibold hover:bg-yellow-400 transition-colors duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
+                Play Again
+              </motion.button>
+              
+              <motion.button
+                onClick={onExit}
+                className="flex-1 px-4 sm:px-6 py-3 rounded-xl bg-white/10 text-white font-semibold hover:bg-white/20 transition-colors duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Home className="w-4 h-4 sm:w-5 sm:h-5" />
+                Exit
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* Decorative Stars */}
+          <motion.div 
+            className="flex justify-center gap-1 sm:gap-2 pb-4 sm:pb-6"
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.5 }}
+          >
+            {[1, 2, 3, 4, 5].map((star) => (
+              <motion.div
+                key={star}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 + (star * 0.1), type: "spring", stiffness: 300 }}
+              >
+                <Star className="w-3 h-3 sm:w-4 sm:h-4 text-[rgba(255,215,0,0.9)] fill-current" />
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
