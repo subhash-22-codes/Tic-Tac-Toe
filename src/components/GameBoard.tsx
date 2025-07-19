@@ -3,7 +3,7 @@ import { GameSettings } from '../App';
 import Board from './Board';
 import Dashboard from './Dashboard';
 import WinnerModal from './WinnerModal';
-import { Flame, RotateCcw, Home, Zap } from 'lucide-react';
+import { RotateCcw, Home, Zap } from 'lucide-react';
 
 interface GameBoardProps {
   gameSettings: GameSettings;
@@ -111,7 +111,7 @@ useEffect(() => {
       <div className="max-w-7xl mx-auto mb-4 sm:mb-6 lg:mb-8">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4">
           <div className="text-center sm:text-left">
-            <h1 className="font-maddac text-2xl sm:text-4xl lg:text-6xl font-bold bg-gradient-to-r from-[#00BFFF] via-[#FFD700] to-[#FF4500] bg-clip-text text-transparent leading-tight">
+            <h1 className="font-madimi text-2xl sm:text-4xl lg:text-6xl font-bold bg-gradient-to-r from-[#00BFFF] via-[#FFD700] to-[#FF4500] bg-clip-text text-transparent leading-tight">
               TIC TAC TOE
             </h1>
             <p className="font-poppins text-sm sm:text-base lg:text-lg text-gray-300 mt-1">
@@ -162,13 +162,9 @@ useEffect(() => {
             
             {/* Mobile VS Section */}
             <div className="flex items-center justify-center px-2">
-              <div className="glassmorphism rounded-full p-2 w-12 h-12 flex items-center justify-center">
-                <Flame className="w-6 h-6 text-[#FF4500] animate-pulse" />
-              </div>
-              <span className="font-modern-outdoor text-lg font-bold mx-2 text-[#FFD700]">VS</span>
-              <div className="glassmorphism rounded-full p-2 w-12 h-12 flex items-center justify-center">
-                <Flame className="w-6 h-6 text-[#FF4500] animate-pulse" />
-              </div>
+      
+              <span className="font-bungee text-lg font-bold mx-2 text-[#FFD700]">VS</span>
+      
             </div>
 
             <div className="flex-1 max-w-[140px]">
@@ -204,7 +200,7 @@ useEffect(() => {
           {roundWinner && (
             <div className="text-center px-4">
               <div className="glassmorphism rounded-xl p-3 inline-block animate-in zoom-in-95 duration-300">
-                <p className="font-uphoria text-lg font-bold text-[#FFD700]">
+                <p className="font-outfit text-lg font-bold text-[#FFD700]">
                   {roundWinner === 'tie' ? "It's a Tie!" : `${roundWinner} Wins!`}
                 </p>
                 <p className="font-poppins text-xs text-gray-300 mt-1">
@@ -235,13 +231,9 @@ useEffect(() => {
             
             {/* Desktop VS Section */}
             <div className="flex items-center justify-center">
-              <div className="glassmorphism rounded-full p-6 w-24 h-24 flex items-center justify-center">
-                <Flame className="w-12 h-12 text-[#FF4500] animate-pulse" />
-              </div>
-              <span className="font-modern-outdoor text-4xl font-bold mx-6 text-[#FFD700]">VS</span>
-              <div className="glassmorphism rounded-full p-6 w-24 h-24 flex items-center justify-center">
-                <Flame className="w-12 h-12 text-[#FF4500] animate-pulse" />
-              </div>
+              
+              <span className="font-bungee text-4xl font-bold mx-6 text-[#FFD700]">VS</span>
+  
             </div>
 
             <Dashboard

@@ -27,12 +27,12 @@ export default function LandingPage({ onStartGame }: LandingPageProps) {
         {/* Professional Header */}
         <div className="text-center mb-8 sm:mb-12 lg:mb-16 animate-in slide-in-from-top-4 duration-500">
           <div className="relative inline-block">
-            <h1 className="font-maddac text-4xl sm:text-6xl lg:text-8xl font-bold text-white mb-4 sm:mb-6 tracking-wider transition-all duration-300 hover:tracking-widest">
+            <h1 className="font-madimi text-4xl sm:text-6xl lg:text-8xl font-bold text-white mb-4 sm:mb-6 tracking-wider transition-all duration-300 hover:tracking-widest">
               TIC TAC TOE
             </h1>
             <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 w-24 sm:w-32 h-0.5 sm:h-1 bg-[#FFD700] rounded-full animate-in slide-in-from-left-full duration-700 delay-300"></div>
           </div>
-          <p className="font-galey text-base sm:text-lg lg:text-2xl text-gray-300 mt-6 sm:mt-8 max-w-2xl mx-auto leading-relaxed animate-in slide-in-from-bottom-4 duration-500 delay-200">
+          <p className="font-outfit text-base sm:text-lg lg:text-2xl text-gray-300 mt-6 sm:mt-8 max-w-2xl mx-auto leading-relaxed animate-in slide-in-from-bottom-4 duration-500 delay-200">
             Strategic gameplay meets timeless competition. Master the grid, dominate your opponent.
           </p>
         </div>
@@ -114,7 +114,7 @@ export default function LandingPage({ onStartGame }: LandingPageProps) {
                   <button
                     onClick={handleStartGame}
                     disabled={!player1Name.trim() || !player2Name.trim()}
-                    className="font-poppins w-full inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg sm:rounded-xl bg-white text-black hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-xl disabled:hover:scale-100"
+                    className="font-madimi w-full inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg sm:rounded-xl bg-white text-black hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-xl disabled:hover:scale-100"
                   >
                     <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                     Initialize Game
@@ -132,7 +132,7 @@ export default function LandingPage({ onStartGame }: LandingPageProps) {
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#FFD700]/10 flex items-center justify-center mr-2 sm:mr-3 transition-all duration-200 hover:bg-[#FFD700]/20">
                   <Target className="w-4 h-4 sm:w-5 sm:h-5 text-[#FFD700]" />
                 </div>
-                <h3 className="font-poppins text-base sm:text-lg font-semibold text-white">Game Features</h3>
+                <h3 className="font-madimi text-base sm:text-lg font-semibold text-white">Game Features</h3>
               </div>
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex items-center text-xs sm:text-sm text-gray-300 animate-in slide-in-from-left-2 duration-300 delay-800">
@@ -156,9 +156,9 @@ export default function LandingPage({ onStartGame }: LandingPageProps) {
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#00BFFF]/10 flex items-center justify-center mr-2 sm:mr-3 transition-all duration-200 hover:bg-[#00BFFF]/20">
                   <Gamepad2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#00BFFF]" />
                 </div>
-                <h3 className="font-poppins text-base sm:text-lg font-semibold text-white">How to Play</h3>
+                <h3 className="font-madimi text-base sm:text-lg font-semibold text-white">How to Play</h3>
               </div>
-              <p className="font-galey text-xs sm:text-sm text-gray-300 leading-relaxed animate-in slide-in-from-bottom-2 duration-400 delay-1100">
+              <p className="font-outfit text-xs sm:text-sm text-gray-300 leading-relaxed animate-in slide-in-from-bottom-2 duration-400 delay-1100">
                 Players alternate placing X's and O's on a 3×3 grid. First to achieve three marks in a row, column, or diagonal wins the round.
               </p>
             </div>
@@ -168,8 +168,8 @@ export default function LandingPage({ onStartGame }: LandingPageProps) {
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-[#FFD700]/10 flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-200 hover:bg-[#FFD700]/20 animate-in zoom-in-50 duration-500 delay-1200">
                 <Award className="w-6 h-6 sm:w-8 sm:h-8 text-[#FFD700]" />
               </div>
-              <h3 className="font-uphoria text-base sm:text-lg font-semibold text-[#FFD700] mb-1 sm:mb-2 animate-in slide-in-from-bottom-2 duration-400 delay-1300">Championship Mode</h3>
-              <p className="font-galey text-xs text-gray-400 animate-in slide-in-from-bottom-2 duration-400 delay-1400">
+              <h3 className="font-bungee text-base sm:text-lg font-semibold text-[#FFD700] mb-1 sm:mb-2 animate-in slide-in-from-bottom-2 duration-400 delay-1300">Championship Mode</h3>
+              <p className="font-outfit text-xs text-gray-400 animate-in slide-in-from-bottom-2 duration-400 delay-1400">
                 Compete across multiple rounds to determine the ultimate champion
               </p>
             </div>
