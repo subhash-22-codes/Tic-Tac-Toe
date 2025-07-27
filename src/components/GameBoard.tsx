@@ -12,6 +12,11 @@ interface GameBoardProps {
 
 export type Player = 'X' | 'O' | null;
 
+interface SymbolAssignment {
+  player1Symbol: 'X' | 'O';
+  player2Symbol: 'X' | 'O';
+}
+
 export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps) {
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<'X' | 'O'>('X');
@@ -20,6 +25,10 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
   const [winner, setWinner] = useState<string | null>(null);
   const [gameComplete, setGameComplete] = useState(false);
   const [roundWinner, setRoundWinner] = useState<string | null>(null);
+  const [symbolAssignment, setSymbolAssignment] = useState<SymbolAssignment>({
+    player1Symbol: 'X',
+    player2Symbol: 'O'
+  });
 
   const avatars = [
     'https://i.imgflip.com/4/4t0m5.jpg', // Distracted Boyfriend
@@ -32,6 +41,80 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
     'https://i.imgflip.com/3txjhl.jpg', // Buff Doge vs Cheems
     'https://i.imgflip.com/2hgfw.jpg'   // Success Kid
   ];
+
+  // Function to determine symbol assignment for a round
+  const getSymbolAssignmentForRound = (round: number): SymbolAssignment => {
+    const totalRounds = gameSettings.totalRounds;
+    
+    if (totalRounds % 2 === 0) {
+      // Even total rounds: always alternate
+      if (round % 2 === 1) {
+        // Odd numbered rounds (1, 3, 5...): Player 1 = X, Player 2 = O
+        return {
+          player1Symbol: 'X',
+          player2Symbol: 'O'
+        };
+      } else {
+        // Even numbered rounds (2, 4, 6...): Player 1 = O, Player 2 = X
+        return {
+          player1Symbol: 'O',
+          player2Symbol: 'X'
+        };
+      }
+    } else {
+      // Odd total rounds: alternate except for the last round
+      if (round === totalRounds) {
+        // Last round: randomize
+        const random = Math.random();
+        if (random < 0.5) {
+          return {
+            player1Symbol: 'X',
+            player2Symbol: 'O'
+          };
+        } else {
+          return {
+            player1Symbol: 'O',
+            player2Symbol: 'X'
+          };
+        }
+      } else {
+        // Not the last round: alternate
+        if (round % 2 === 1) {
+          // Odd numbered rounds (1, 3, 5...): Player 1 = X, Player 2 = O
+          return {
+            player1Symbol: 'X',
+            player2Symbol: 'O'
+          };
+        } else {
+          // Even numbered rounds (2, 4, 6...): Player 1 = O, Player 2 = X
+          return {
+            player1Symbol: 'O',
+            player2Symbol: 'X'
+          };
+        }
+      }
+    }
+  };
+
+  // Function to get player name by symbol
+  const getPlayerNameBySymbol = (symbol: 'X' | 'O'): string => {
+    return symbol === symbolAssignment.player1Symbol ? gameSettings.player1Name : gameSettings.player2Name;
+  };
+
+  // Function to get player color by symbol
+  const getPlayerColorBySymbol = (symbol: 'X' | 'O'): string => {
+    return symbol === symbolAssignment.player1Symbol ? '#00BFFF' : '#FF4500';
+  };
+
+  // Function to get player 1 color based on their current symbol
+  const getPlayer1Color = (): string => {
+    return symbolAssignment.player1Symbol === 'X' ? '#00BFFF' : '#FF4500';
+  };
+
+  // Function to get player 2 color based on their current symbol
+  const getPlayer2Color = (): string => {
+    return symbolAssignment.player2Symbol === 'X' ? '#00BFFF' : '#FF4500';
+  };
 
   const checkWinner = (squares: Player[]) => {
     const lines = [
@@ -57,11 +140,12 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
 
     const winner = checkWinner(newBoard);
     if (winner) {
-      const winnerName = winner === 'X' ? gameSettings.player1Name : gameSettings.player2Name;
+      const winnerName = getPlayerNameBySymbol(winner);
       setRoundWinner(winnerName);
       setScores(prev => ({
         ...prev,
-        [winner === 'X' ? 'player1' : 'player2']: prev[winner === 'X' ? 'player1' : 'player2'] + 1
+        [winner === symbolAssignment.player1Symbol ? 'player1' : 'player2']: 
+          prev[winner === symbolAssignment.player1Symbol ? 'player1' : 'player2'] + 1
       }));
     } else if (newBoard.every(square => square !== null)) {
       // Tie
@@ -88,12 +172,23 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
       setWinner(finalWinner);
       setGameComplete(true);
     } else {
-      setCurrentRound(prev => prev + 1);
+      const nextRoundNumber = currentRound + 1;
+      const newSymbolAssignment = getSymbolAssignmentForRound(nextRoundNumber);
+      
+      setCurrentRound(nextRoundNumber);
       setBoard(Array(9).fill(null));
-      setCurrentPlayer('X');
+      setSymbolAssignment(newSymbolAssignment);
+      setCurrentPlayer('X'); // X always goes first (Tic-Tac-Toe rule)
       setRoundWinner(null);
     }
   }, [currentRound, gameSettings, scores]);
+
+  // Initialize symbol assignment for first round
+  useEffect(() => {
+    const initialAssignment = getSymbolAssignmentForRound(1);
+    setSymbolAssignment(initialAssignment);
+    setCurrentPlayer('X'); // X always goes first (Tic-Tac-Toe rule)
+  }, []);
 
   useEffect(() => {
     if (roundWinner) {
@@ -116,14 +211,25 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
             <p className="font-poppins text-sm sm:text-base lg:text-lg text-gray-300 mt-1">
               Round {currentRound} of {gameSettings.totalRounds}
             </p>
+            {/* Symbol Assignment Info */}
+            <p className="font-poppins text-xs sm:text-sm text-[#FFD700] mt-1">
+              {gameSettings.totalRounds % 2 === 0 
+                ? 'Even Total Rounds: Always Alternating' 
+                : currentRound === gameSettings.totalRounds 
+                  ? 'Final Round: Randomized' 
+                  : 'Alternating Symbols'
+              }
+            </p>
           </div>
           
           {/* Compact Action Buttons */}
           <div className="flex gap-2">
             <button
               onClick={() => {
+                const newSymbolAssignment = getSymbolAssignmentForRound(currentRound);
                 setBoard(Array(9).fill(null));
-                setCurrentPlayer('X');
+                setSymbolAssignment(newSymbolAssignment);
+                setCurrentPlayer('X'); // X always goes first (Tic-Tac-Toe rule)
                 setRoundWinner(null);
               }}
               className="font-poppins px-2 py-1.5 sm:px-3 sm:py-2 lg:px-4 lg:py-2 text-xs sm:text-sm rounded-lg glassmorphism hover:bg-white/20 transition-all duration-200 flex items-center gap-1 sm:gap-2"
@@ -153,9 +259,9 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
                 playerName={gameSettings.player1Name}
                 score={scores.player1}
                 avatar={avatars[0]}
-                isActive={currentPlayer === 'X' && !roundWinner}
-                symbol="X"
-                color="#00BFFF"
+                isActive={currentPlayer === symbolAssignment.player1Symbol && !roundWinner}
+                symbol={symbolAssignment.player1Symbol}
+                color={getPlayer1Color()}
               />
             </div>
             
@@ -169,9 +275,9 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
                 playerName={gameSettings.player2Name}
                 score={scores.player2}
                 avatar={avatars[1]}
-                isActive={currentPlayer === 'O' && !roundWinner}
-                symbol="O"
-                color="#FF4500"
+                isActive={currentPlayer === symbolAssignment.player2Symbol && !roundWinner}
+                symbol={symbolAssignment.player2Symbol}
+                color={getPlayer2Color()}
               />
             </div>
           </div>
@@ -183,8 +289,8 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
                 <div className="flex items-center justify-center gap-2">
                   <Zap className="w-4 h-4 text-[#FFD700] animate-pulse" />
                   <p className="font-poppins text-sm text-gray-300">
-                    <span className={`font-semibold ${currentPlayer === 'X' ? 'text-[#00BFFF]' : 'text-[#FF4500]'}`}>
-                      {currentPlayer === 'X' ? gameSettings.player1Name : gameSettings.player2Name}
+                    <span className={`font-semibold ${getPlayerColorBySymbol(currentPlayer)}`}>
+                      {getPlayerNameBySymbol(currentPlayer)}
                     </span>
                     <span className="text-[#FFD700] ml-1">({currentPlayer})</span>
                   </p>
@@ -222,9 +328,9 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
                 playerName={gameSettings.player1Name}
                 score={scores.player1}
                 avatar={avatars[0]}
-                isActive={currentPlayer === 'X' && !roundWinner}
-                symbol="X"
-                color="#00BFFF"
+                isActive={currentPlayer === symbolAssignment.player1Symbol && !roundWinner}
+                symbol={symbolAssignment.player1Symbol}
+                color={getPlayer1Color()}
               />
             </div>
           </div>
@@ -239,8 +345,8 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
                     <Zap className="w-6 h-6 text-[#FFD700] animate-pulse" />
                     <p className="font-poppins text-2xl text-gray-300">
                       Current Turn: 
-                      <span className={`ml-2 font-semibold ${currentPlayer === 'X' ? 'text-[#00BFFF]' : 'text-[#FF4500]'}`}>
-                        {currentPlayer === 'X' ? gameSettings.player1Name : gameSettings.player2Name}
+                      <span className={`ml-2 font-semibold ${getPlayerColorBySymbol(currentPlayer)}`}>
+                        {getPlayerNameBySymbol(currentPlayer)}
                       </span>
                       <span className="text-[#FFD700] ml-2">({currentPlayer})</span>
                     </p>
@@ -286,9 +392,9 @@ export default function GameBoard({ gameSettings, onResetGame }: GameBoardProps)
                 playerName={gameSettings.player2Name}
                 score={scores.player2}
                 avatar={avatars[1]}
-                isActive={currentPlayer === 'O' && !roundWinner}
-                symbol="O"
-                color="#FF4500"
+                isActive={currentPlayer === symbolAssignment.player2Symbol && !roundWinner}
+                symbol={symbolAssignment.player2Symbol}
+                color={getPlayer2Color()}
               />
             </div>
           </div>

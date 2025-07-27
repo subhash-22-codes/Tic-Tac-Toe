@@ -7,6 +7,16 @@ interface SquareProps {
 }
 
 export default function Square({ value, onClick }: SquareProps) {
+  // Function to get color based on symbol (X always blue, O always red)
+  const getSymbolColor = (symbol: 'X' | 'O'): string => {
+    return symbol === 'X' ? '#00BFFF' : '#FF4500';
+  };
+
+  // Function to get background color based on symbol (X always blue, O always red)
+  const getSymbolBgColor = (symbol: 'X' | 'O'): string => {
+    return symbol === 'X' ? 'bg-[#00BFFF]/10' : 'bg-[#FF4500]/10';
+  };
+
   return (
     <button
       onClick={onClick}
@@ -16,14 +26,17 @@ export default function Square({ value, onClick }: SquareProps) {
         font-bold text-4xl flex items-center justify-center
         hover:scale-105 active:scale-95
         ${value ? 'cursor-not-allowed' : 'cursor-pointer hover:bg-white/10'}
-        ${value === 'X' ? 'text-[#00BFFF] bg-[#00BFFF]/10' : ''}
-        ${value === 'O' ? 'text-[#FF4500] bg-[#FF4500]/10' : ''}
+        ${value === 'X' ? `text-[${getSymbolColor('X')}] ${getSymbolBgColor('X')}` : ''}
+        ${value === 'O' ? `text-[${getSymbolColor('O')}] ${getSymbolBgColor('O')}` : ''}
         ${!value ? 'glassmorphism-dark' : ''}
       `}
       disabled={!!value}
     >
       {value && (
-        <span className="font-modern-outdoor text-5xl font-bold animate-in fade-in-0 zoom-in-75 duration-300">
+        <span 
+          className="font-modern-outdoor text-5xl font-bold animate-in fade-in-0 zoom-in-75 duration-300"
+          style={{ color: getSymbolColor(value) }}
+        >
           {value}
         </span>
       )}

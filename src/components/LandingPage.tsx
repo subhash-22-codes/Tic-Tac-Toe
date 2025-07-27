@@ -54,7 +54,7 @@ export default function LandingPage({ onStartGame }: LandingPageProps) {
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="space-y-2 sm:space-y-3 animate-in slide-in-from-left-4 duration-400 delay-500">
                     <label className="font-poppins block text-xs sm:text-sm font-medium text-[#00BFFF] uppercase tracking-wide">
-                      Player 1 • X
+                      Player 1
                     </label>
                     <div className="relative group">
                       <input
@@ -69,7 +69,7 @@ export default function LandingPage({ onStartGame }: LandingPageProps) {
                   </div>
                   <div className="space-y-2 sm:space-y-3 animate-in slide-in-from-right-4 duration-400 delay-500">
                     <label className="font-poppins block text-xs sm:text-sm font-medium text-[#FF4500] uppercase tracking-wide">
-                      Player 2 • O
+                      Player 2
                     </label>
                     <div className="relative group">
                       <input
@@ -160,6 +160,9 @@ export default function LandingPage({ onStartGame }: LandingPageProps) {
               </div>
               <p className="font-outfit text-xs sm:text-sm text-gray-300 leading-relaxed animate-in slide-in-from-bottom-2 duration-400 delay-1100">
                 Players alternate placing X's and O's on a 3×3 grid. First to achieve three marks in a row, column, or diagonal wins the round.
+              </p>
+              <p className="font-outfit text-xs sm:text-xs text-[#FFD700] leading-relaxed animate-in slide-in-from-bottom-2 duration-400 delay-1200 mt-2">
+                <strong>Fair Play:</strong> Even total rounds = always alternate. Odd total rounds = alternate + random final round! <strong>X always goes first.</strong>
               </p>
             </div>
 
