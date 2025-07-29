@@ -162,7 +162,7 @@ export default function LandingPage({ onStartGame }: LandingPageProps) {
                 Players alternate placing X's and O's on a 3×3 grid. First to achieve three marks in a row, column, or diagonal wins the round.
               </p>
               <p className="font-outfit text-xs sm:text-xs text-[#FFD700] leading-relaxed animate-in slide-in-from-bottom-2 duration-400 delay-1200 mt-2">
-                <strong>Fair Play:</strong> Even total rounds = always alternate. Odd total rounds = alternate + random final round! <strong>X always goes first.</strong>
+                <strong>Fair Play:</strong> Even total rounds = always alternate. Odd total rounds = alternate + random final round! <strong>X|O</strong>
               </p>
             </div>
 
